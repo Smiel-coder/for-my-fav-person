@@ -1,472 +1,110 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiss Me First 💋 | For Wifey Nhi</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        :root {
-            --pink: #ff5c9a;
-            --dark-pink: #e83e80;
-            --text: #75465a;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            padding: 28px 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: "Trebuchet MS", Arial, sans-serif;
-            background:
-                radial-gradient(circle at 15% 15%, #ffffff 0 3px, transparent 4px),
-                radial-gradient(circle at 85% 25%, #ffffffa0 0 4px, transparent 5px),
-                linear-gradient(135deg, #ffdce9, #ffacd0, #ffc8df);
-            background-size: 100px 100px, 130px 130px, auto;
-            color: var(--text);
-            overflow-x: hidden;
-        }
-
-        .card {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 510px;
-            padding: 32px 22px;
-            background: #ffffffed;
-            border: 2px solid white;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 18px 55px #b83b7130;
-            animation: appear 0.8s ease both;
-        }
-
-        @keyframes appear {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .top-heart {
-            font-size: 34px;
-            animation: beat 1s infinite alternate;
-        }
-
-        @keyframes beat {
-            to { transform: scale(1.15); }
-        }
-
-        h1 {
-            color: var(--dark-pink);
-            font-size: clamp(25px, 6vw, 34px);
-            margin: 12px 0;
-        }
-
-        p {
-            color: #8a6274;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        button {
-            font: inherit;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .answer-button {
-            border: 0;
-            border-radius: 30px;
-            padding: 13px 22px;
-            margin: 7px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .answer-button:hover,
-        .voice-button:hover,
-        .cat-button:hover {
-            transform: translateY(-3px);
-        }
-
-        #yes {
-            color: white;
-            background: linear-gradient(135deg, #ff78ac, #f13d85);
-            box-shadow: 0 6px 15px #f13d8530;
-        }
-
-        #no {
-            color: #795b68;
-            background: #f6eaf0;
-        }
-
-        #result {
-            display: none;
-        }
-
-        #heart {
-            font-size: 76px;
-            animation: beat 0.7s infinite alternate;
-        }
-
-        .divider {
-            height: 1px;
-            margin: 25px 0;
-            background: #f8d9e6;
-        }
-
-        .section-title {
-            margin: 0 0 6px;
-            color: #e83e80;
-            font-size: 21px;
-        }
-
-        .section-description {
-            margin: 5px 0 16px;
-            font-size: 14px;
-        }
-
-        /* Interactive cats */
-
-        .cats {
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            margin: 18px 0;
-        }
-
-        .cat-button {
-            width: 112px;
-            min-height: 108px;
-            border: 2px solid #ffe0ec;
-            border-radius: 24px;
-            background: linear-gradient(145deg, #fff8fb, #ffe6f0);
-            box-shadow: 0 7px 18px #ce64931a;
-            transition: transform 0.2s;
-        }
-
-        .cat-face {
-            display: block;
-            font-size: 53px;
-            line-height: 1.2;
-        }
-
-        .cat-label {
-            display: block;
-            margin-top: 5px;
-            color: #c34d7e;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* Voice message buttons */
-
-        .voice-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        .voice-button {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            width: 100%;
-            padding: 15px;
-            text-align: left;
-            color: #914565;
-            background: linear-gradient(120deg, #fff0f6, #ffe2ed);
-            border: 1px solid #ffd0e2;
-            border-radius: 19px;
-            box-shadow: 0 5px 14px #c85c8710;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .voice-icon {
-            display: grid;
-            place-items: center;
-            flex-shrink: 0;
-            width: 47px;
-            height: 47px;
-            border-radius: 15px;
-            background: white;
-            font-size: 24px;
-        }
-
-        .voice-copy {
-            flex: 1;
-        }
-
-        .voice-copy strong {
-            display: block;
-            font-size: 15px;
-        }
-
-        .voice-copy small {
-            display: block;
-            margin-top: 4px;
-            color: #a67b8d;
-            font-size: 12px;
-        }
-
-        .play-icon {
-            font-size: 20px;
-        }
-
-        #voiceStatus {
-            min-height: 22px;
-            margin: 14px 0 0;
-            font-size: 13px;
-            color: #c34d7e;
-        }
-
-        .footer {
-            margin-top: 22px;
-            color: #b17b92;
-            font-size: 12px;
-        }
-
-        .floating-heart {
-            position: fixed;
-            bottom: -35px;
-            z-index: 0;
-            pointer-events: none;
-            animation: floatUp 4s linear forwards;
-        }
-
-        @keyframes floatUp {
-            to {
-                transform: translateY(-110vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .card {
-                padding: 25px 15px;
-            }
-
-            .cat-button {
-                width: 100px;
-            }
-
-            .answer-button {
-                padding: 12px 18px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I want kiss☹️💋</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ffe0ed, #ffc2dc, #fff0f6);
+      color: #87365b;
+    }
+    .card {
+      width: min(90%, 430px);
+      padding: 35px 22px;
+      text-align: center;
+      background: rgba(255,255,255,.88);
+      border: 2px solid #fff;
+      border-radius: 28px;
+      box-shadow: 0 12px 40px #d76c9b35;
+    }
+    .heart { font-size: 58px; animation: pulse 1.2s infinite; }
+    h1 { font-size: 2.1rem; margin: 15px 0; }
+    p { font-size: 1.05rem; }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      min-height: 60px;
+    }
+    button {
+      border: none;
+      padding: 14px 20px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    button:active { transform: scale(.95); }
+    #yes {
+      background: #ed5d9c;
+      color: white;
+      box-shadow: 0 5px 12px #ed5d9c45;
+    }
+    #no { background: #ffe0ed; color: #a83b70; }
+    .hint { font-size: .85rem; color: #b36a8c; margin-top: 22px; }
+    @keyframes pulse {
+      50% { transform: scale(1.12); }
+    }
+    .floating {
+      position: fixed;
+      bottom: -30px;
+      pointer-events: none;
+      animation: floatUp 5s linear forwards;
+    }
+    @keyframes floatUp {
+      to { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+    }
+  </style>
 </head>
-
 <body>
-    <main class="card">
+  <main class="card">
+    <div class="heart">💋</div>
+    <h1>I want kiss☹️💋</h1>
+    <p>🥺🥺🥺🥺🥺</p>
+    <div class="buttons">
+      <button id="yes" onclick="goToSurprise()">Kiss 💋</button>
+      <button id="no" onclick="moveNo()">I dun like 😋</button>
+    </div>
+    <p class="hint">Choose wisely cutie Nih 😈</p>
+  </main>
 
-        <div class="top-heart">💗</div>
+  <script>
+    function goToSurprise() {
+      window.location.href = "surprise.html";
+    }
 
-        <section id="question">
-            <h1>Kiss Me First 💋</h1>
-            <p>Come here, wifey! Give me a kiss. 🥺💕</p>
+    function moveNo() {
+      const btn = document.getElementById("no");
+      btn.style.position = "fixed";
+      const maxX = Math.max(0, window.innerWidth - btn.offsetWidth - 10);
+      const maxY = Math.max(0, window.innerHeight - btn.offsetHeight - 10);
+      btn.style.left = Math.random() * maxX + "px";
+      btn.style.top = Math.random() * maxY + "px";
+    }
 
-            <button class="answer-button" id="yes" onclick="sayYes()">
-                Kiss You 💋
-            </button>
-
-            <button class="answer-button" id="no" onclick="moveNo()">
-                I dun like 😝
-            </button>
-        </section>
-
-        <section id="result">
-            <div id="heart">💋</div>
-            <h1>Mwah! Got Your Kiss! 💗</h1>
-            <p>I love you, vợ yêu Nhi! 💕</p>
-            <p>Forever and always, my love. ♡</p>
-        </section>
-
-        <div class="divider"></div>
-
-        <section>
-            <h2 class="section-title">Little Kitty Corner 🐾</h2>
-            <p class="section-description">
-                Tap a kitty, wifey! They have something to say to you. 🐱
-            </p>
-
-            <div class="cats">
-                <button class="cat-button"
-                        onclick="playVoice('meow')"
-                        aria-label="Tap the first cat to hear a meow">
-                    <span class="cat-face">🐱</span>
-                    <span class="cat-label">MEOW! 💗</span>
-                </button>
-
-                <button class="cat-button"
-                        onclick="playVoice('meow')"
-                        aria-label="Tap the second cat to hear a meow">
-                    <span class="cat-face">😽</span>
-                    <span class="cat-label">MEOW! 💕</span>
-                </button>
-            </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <section>
-            <h2 class="section-title">A Little Something for You 💌</h2>
-            <p class="section-description">
-                I have a few things I want you to hear, my wifey.
-            </p>
-
-            <div class="voice-list">
-                <button class="voice-button"
-                        onclick="playVoice('monthsary')">
-                    <span class="voice-icon">💌</span>
-                    <span class="voice-copy">
-                        <strong>Monthsary 💕</strong>
-                        <small>A little speech from me, just for you.</small>
-                    </span>
-                    <span class="play-icon">▶</span>
-                </button>
-
-                <button class="voice-button"
-                        onclick="playVoice('wifey')">
-                    <span class="voice-icon">💗</span>
-                    <span class="voice-copy">
-                        <strong>For Wifey Nih</strong>
-                        <small>Something special from my heart.</small>
-                    </span>
-                    <span class="play-icon">▶</span>
-                </button>
-            </div>
-
-            <p id="voiceStatus" aria-live="polite">
-                Made with love, just for you. 💕
-            </p>
-        </section>
-
-        <div class="footer">
-            Made with all my love for my wifey Nhi ♡
-        </div>
-
-    </main>
-
-    <!-- Upload these three audio files to the repository root -->
-    <audio id="meow" src="meow.mp3" preload="none"></audio>
-    <audio id="monthsary" src="monthsary.mp3" preload="none"></audio>
-    <audio id="wifey" src="wifey-nih.mp3" preload="none"></audio>
-
-    <script>
-        let activeAudio = null;
-
-        function sayYes() {
-            document.getElementById("question").style.display = "none";
-            document.getElementById("result").style.display = "block";
-
-            for (let i = 0; i < 28; i++) {
-                setTimeout(createHeart, i * 120);
-            }
-        }
-
-        function moveNo() {
-            const button = document.getElementById("no");
-            const margin = 10;
-
-            button.style.position = "fixed";
-
-            const maxX = Math.max(
-                margin,
-                window.innerWidth - button.offsetWidth - margin
-            );
-
-            const maxY = Math.max(
-                margin,
-                window.innerHeight - button.offsetHeight - margin
-            );
-
-            button.style.left =
-                margin + Math.random() * (maxX - margin) + "px";
-
-            button.style.top =
-                margin + Math.random() * (maxY - margin) + "px";
-        }
-
-        function playVoice(id) {
-            const audio = document.getElementById(id);
-            const status = document.getElementById("voiceStatus");
-
-            if (activeAudio && activeAudio !== audio) {
-                activeAudio.pause();
-                activeAudio.currentTime = 0;
-            }
-
-            if (activeAudio === audio && !audio.paused) {
-                audio.pause();
-                audio.currentTime = 0;
-                activeAudio = null;
-                status.textContent = "Paused. Tap again to listen. 💗";
-                return;
-            }
-
-            activeAudio = audio;
-
-            if (id === "meow") {
-                status.textContent = "A little meow just for you! 🐱💕";
-            } else if (id === "monthsary") {
-                status.textContent = "Playing your monthsary message... 💌";
-            } else {
-                status.textContent = "A special message for Nhi... 💗";
-            }
-
-            audio.currentTime = 0;
-
-            audio.play().catch(() => {
-                status.textContent =
-                    "Audio isn't ready yet. Please upload the recording first! 💕";
-                activeAudio = null;
-            });
-
-            audio.onended = () => {
-                if (activeAudio === audio) {
-                    activeAudio = null;
-                    status.textContent = "Sending you all my love! 💗";
-                }
-            };
-        }
-
-        function createHeart() {
-            const heart = document.createElement("div");
-            heart.className = "floating-heart";
-            heart.textContent = ["❤️", "💕", "💗", "💖", "💘"][
-                Math.floor(Math.random() * 5)
-            ];
-
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.fontSize = (18 + Math.random() * 22) + "px";
-
-            document.body.appendChild(heart);
-
-            setTimeout(() => heart.remove(), 4000);
-        }
-    </script>
+    setInterval(() => {
+      const heart = document.createElement("span");
+      heart.className = "floating";
+      heart.textContent = ["💗", "💕", "💖", "💋"][Math.floor(Math.random() * 4)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = (18 + Math.random() * 18) + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }, 800);
+  </script>
 </body>
 </html>

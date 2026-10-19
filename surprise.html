@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Vợ yêu 💖</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 25px 14px 45px;
+      font-family: Arial, sans-serif;
+      color: #87365b;
+      background: linear-gradient(135deg, #ffe0ed, #ffc2dc, #fff0f6);
+      min-height: 100vh;
+    }
+    .container { max-width: 520px; margin: auto; }
+    .card {
+      background: rgba(255,255,255,.9);
+      border: 2px solid white;
+      border-radius: 25px;
+      padding: 25px 20px;
+      margin: 18px 0;
+      text-align: center;
+      box-shadow: 0 10px 30px #d76c9b25;
+    }
+    h1 { font-size: 2rem; }
+    h2 { margin-top: 8px; }
+    button {
+      border: 0;
+      border-radius: 25px;
+      padding: 13px 18px;
+      margin: 7px 4px;
+      background: #ed5d9c;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:active { transform: scale(.97); }
+    .cat { font-size: 75px; cursor: pointer; user-select: none; }
+    .caption { color: #b36a8c; font-size: .9rem; }
+    .back {
+      display: inline-block;
+      margin: 5px 0 10px;
+      color: #a83b70;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <a class="back" href="index.html">← spam kissee meee💋</a>
+
+    <section class="card">
+      <h1>For My Vợ yêu 💖</h1>
+    </section>
+
+    <section class="card">
+      <h2>A little kitty kitty 😭</h2>
+      <div class="cat" onclick="playVoice('meowAudio')">🐱</div>
+      <p>try to tap babe and you will hear Viva😭</p>
+      <button onclick="playVoice('meowAudio')">Meow for meow 🐾</button>
+      <audio id="meowAudio" src="meowmeow.mp3" preload="auto"></audio>
+      <p class="caption">--------------------</p>
+    </section>
+
+    <section class="card">
+      <h2> Monthsary 💖</h2>
+      <p>A message for my wifey Nih 💖</p>
+      <button onclick="playVoice('monthsaryAudio')">Monthsary 💖</button>
+      <audio id="monthsaryAudio" src="monthsary.mp3" preload="auto"></audio>
+      <p class="caption">--------------------</p>
+    </section>
+
+    <section class="card">
+      <h2>For Wifey Nih 💋</h2>
+      <p>Press play to hear something from me. 🥹</p>
+      <button onclick="playVoice('wifeyAudio')">For Wifey Nih 💖</button>
+      <audio id="wifeyAudio" src="wifey-nih.mp3" preload="auto"></audio>
+      <p class="caption">--------------------</p>
+    </section>
+  </main>
+
+  <script>
+    function playVoice(id) {
+      const selected = document.getElementById(id);
+      document.querySelectorAll("audio").forEach(audio => {
+        if (audio !== selected) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+      selected.currentTime = 0;
+      selected.play().catch(() => {
+        alert("I couldn't play this recording yet. Check that the audio file is uploaded and its filename matches the code.");
+      });
+    }
+  </script>
+</body>
+</html>
