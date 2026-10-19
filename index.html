@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Love Me? ❤️</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            overflow: hidden;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 500px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px #00000030;
+        }
+
+        h1 {
+            color: #ff4081;
+        }
+
+        p {
+            color: #555;
+            font-size: 18px;
+        }
+
+        button {
+            border: none;
+            border-radius: 25px;
+            padding: 13px 30px;
+            margin: 10px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.08);
+        }
+
+        #yes {
+            color: white;
+            background: #ff4081;
+        }
+
+        #no {
+            color: #333;
+            background: #eeeeee;
+        }
+
+        #result {
+            display: none;
+            color: #ff4081;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #heart {
+            font-size: 75px;
+            animation: beat 0.8s infinite alternate;
+        }
+
+        @keyframes beat {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
+
+        .floating-heart {
+            position: fixed;
+            bottom: -30px;
+            font-size: 25px;
+            pointer-events: none;
+            animation: floatUp 4s linear forwards;
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div id="question">
+            <h1>Do You Love Me? 💗</h1>
+            <p>Please choose your answer, my love!</p>
+
+            <button id="yes" onclick="sayYes()">Yes ❤️</button>
+            <button id="no" onclick="moveNo()">No 💔</button>
+        </div>
+
+        <div id="result">
+            <div id="heart">❤️</div>
+            <p>I love you vợ yêu Nhi!</p>
+            <p>Forever and always. 💕</p>
+        </div>
+    </div>
+
+    <script>
+        function sayYes() {
+            document.getElementById("question").style.display = "none";
+            document.getElementById("result").style.display = "block";
+
+            for (let i = 0; i < 25; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        }
+
+        function moveNo() {
+            const button = document.getElementById("no");
+
+            button.style.position = "fixed";
+
+            const maxX = window.innerWidth - button.offsetWidth;
+            const maxY = window.innerHeight - button.offsetHeight;
+
+            button.style.left = Math.random() * Math.max(0, maxX) + "px";
+            button.style.top = Math.random() * Math.max(0, maxY) + "px";
+        }
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.className = "floating-heart";
+            heart.textContent = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
