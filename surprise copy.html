@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Vợ yêu 💖</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 25px 14px 45px;
+      font-family: Arial, sans-serif;
+      color: #87365b;
+      background: linear-gradient(135deg, #ffe0ed, #ffc2dc, #fff0f6);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: auto;
+    }
+
+    .card {
+      background: rgba(255,255,255,.9);
+      border: 2px solid white;
+      border-radius: 25px;
+      padding: 25px 20px;
+      margin: 18px 0;
+      text-align: center;
+      box-shadow: 0 10px 30px #d76c9b25;
+
+      transition:
+        opacity 1.5s ease,
+        background-color 1.5s ease,
+        border-color 1.5s ease,
+        box-shadow 1.5s ease,
+        transform 1.8s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { margin-top: 8px; }
+
+    button {
+      border: 0;
+      border-radius: 25px;
+      padding: 13px 18px;
+      margin: 7px 4px;
+      background: #ed5d9c;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active { transform: scale(.97); }
+
+    button:disabled {
+      cursor: wait;
+    }
+
+    .cat {
+      font-size: 75px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .caption {
+      color: #b36a8c;
+      font-size: .9rem;
+    }
+
+    .back {
+      display: inline-block;
+      margin: 5px 0 10px;
+      color: #a83b70;
+      text-decoration: none;
+      font-weight: bold;
+      transition: opacity 1.5s ease;
+    }
+
+    /* Background music button */
+    .music-toggle {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      margin: 0;
+      border: 2px solid white;
+      border-radius: 50%;
+      background: rgba(255,255,255,.92);
+      color: #e84393;
+      font-size: 18px;
+      box-shadow: 0 3px 12px #d76c9b40;
+    }
+
+    /* Fade the other cards and heading */
+    .container.focus-mode > .card:not(.active),
+    .container.focus-mode > .back {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .container.focus-mode > .card:not(.active) {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    /* Selected card stays visible above the other content */
+    .container > .card.active {
+      position: relative;
+      z-index: 20;
+      opacity: 1;
+      background-color: rgba(255,255,255,.96);
+      border-color: white;
+      box-shadow: 0 15px 45px #d76c9b40;
+      pointer-events: auto;
+    }
+
+    /* Photo gallery for Monthsary */
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 2.5s ease, visibility 0s linear 2.5s;
+    }
+
+    .photo-gallery.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 1s ease, visibility 0s;
+    }
+
+    .photo-gallery img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid white;
+      box-shadow: 0 4px 12px #d76c9b30;
+    }
+
+    @media (max-width: 380px) {
+      .photo-gallery img { height: 100px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .back, .photo-gallery {
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background music -->
+  <audio id="backgroundMusic" src="Love.mp3"
+         loop autoplay preload="auto"></audio>
+
+  <!-- Music ON/OFF button -->
+  <button id="musicButton" class="music-toggle"
+          onclick="toggleMusic()" aria-label="Turn music off">♫</button>
+
+  <main class="container" id="mainContainer">
+
+    <a class="back" href="index.html">← spam kissee meee💋</a>
+
+    <section class="card" id="introCard">
+      <h1>For My Vợ yêu 💖</h1>
+    </section>
+
+    <section class="card" id="meowCard">
+      <h2>A little kitty kitty 😭</h2>
+      <div class="cat" onclick="playVoice('meowAudio')">🐱</div>
+      <p>try to tap babe and you will hear Viva😭</p>
+      <button class="target-button" onclick="playVoice('meowAudio')">
+        Meow for meow 🐾
+      </button>
+      <audio id="meowAudio" src="meow.m4a" preload="auto"></audio>
+      <p class="caption">--------------------</p>
+    </section>
+
+    <section class="card" id="monthsaryCard">
+      <h2>Monthsary 💖</h2>
+      <p>A message for my wifey Nih 💖</p>
+      <button class="target-button" onclick="playVoice('monthsaryAudio')">
+        Monthsary 💖
+      </button>
+      <audio id="monthsaryAudio" src="month.m4a" preload="auto"></audio>
+
+      <!-- Optional three-photo gallery -->
+      <div id="monthsaryPhotos" class="photo-gallery">
+        <img src="monthsary1.jpg" alt="Our special memory 1">
+        <img src="monthsary2.jpg" alt="Our special memory 2">
+        <img src="monthsary3.jpg" alt="Our special memory 3">
+      </div>
+
+      <p class="caption">--------------------</p>
+    </section>
+
+    <section class="card" id="wifeyCard">
+      <h2>For Wifey Nih 💋</h2>
+      <p>Press it babeeeee 🥹</p>
+      <button class="target-button" onclick="playVoice('wifeyAudio')">
+        For Wifey Nih 💖
+      </button>
+      <audio id="wifeyAudio" src="wifeyy.m4a" preload="auto"></audio>
+      <p class="caption">--------------------</p>
+    </section>
+
+  </main>
+
+  <script>
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    const musicButton = document.getElementById("musicButton");
+    const container = document.getElementById("mainContainer");
+    const monthsaryPhotos = document.getElementById("monthsaryPhotos");
+
+    backgroundMusic.volume = 0.01;
+
+    let musicOff = false;
+    let activeCard = null;
+    let isPlayingVoice = false;
+    let restoreTimer = null;
+
+    const voiceCards = {
+      meowAudio: document.getElementById("meowCard"),
+      monthsaryAudio: document.getElementById("monthsaryCard"),
+      wifeyAudio: document.getElementById("wifeyCard")
+    };
+
+    // Attempt autoplay; browsers may require interaction first.
+    backgroundMusic.play().catch(() => {});
+
+    document.addEventListener("click", function startMusic() {
+      if (!musicOff && backgroundMusic.paused) {
+        backgroundMusic.play().catch(() => {});
+      }
+    });
+
+    function toggleMusic() {
+      if (musicOff) {
+        backgroundMusic.play().then(() => {
+          musicOff = false;
+          musicButton.textContent = "♫";
+          musicButton.setAttribute("aria-label", "Turn music off");
+        }).catch(() => {});
+      } else {
+        musicOff = true;
+        backgroundMusic.pause();
+        musicButton.textContent = "♪";
+        musicButton.setAttribute("aria-label", "Turn music on");
+      }
+    }
+
+    function setButtonsDisabled(disabled) {
+      document.querySelectorAll(".target-button").forEach(button => {
+        button.disabled = disabled;
+      });
+    }
+
+    function restoreCards() {
+      if (!activeCard) return;
+
+      // Fade the Monthsary photos out, if present.
+      monthsaryPhotos.classList.remove("show");
+
+      // Return the selected card to its normal position.
+      activeCard.style.transform = "";
+      activeCard.classList.remove("active");
+
+      container.classList.remove("focus-mode");
+
+      activeCard = null;
+      isPlayingVoice = false;
+      setButtonsDisabled(false);
+    }
+
+    function playVoice(id) {
+      const selected = document.getElementById(id);
+      const selectedCard = voiceCards[id];
+
+      if (!selected || !selectedCard || isPlayingVoice) return;
+
+      // Stop any previous voice recording.
+      document.querySelectorAll("audio").forEach(audio => {
+        if (audio !== backgroundMusic) {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.onended = null;
+          audio.onerror = null;
+        }
+      });
+
+      clearTimeout(restoreTimer);
+
+      isPlayingVoice = true;
+      activeCard = selectedCard;
+      setButtonsDisabled(true);
+
+      // Show the three photos only for Monthsary.
+      monthsaryPhotos.classList.remove("show");
+
+      if (id === "monthsaryAudio") {
+        monthsaryPhotos.style.visibility = "visible";
+        requestAnimationFrame(() => {
+          monthsaryPhotos.classList.add("show");
+        });
+      }
+
+      // Begin hiding the other cards and heading.
+      container.classList.add("focus-mode");
+      selectedCard.classList.add("active");
+
+      // Move the selected card toward the center of the viewport.
+      const rect = selectedCard.getBoundingClientRect();
+      const moveX = window.innerWidth / 2 - (rect.left + rect.width / 2);
+      const moveY = window.innerHeight / 2 - (rect.top + rect.height / 2);
+
+      // Let the browser apply the focus state before moving.
+      requestAnimationFrame(() => {
+        if (activeCard === selectedCard) {
+          selectedCard.style.transform =
+            `translate(${moveX}px, ${moveY}px)`;
+        }
+      });
+
+      selected.onended = () => {
+        restoreCards();
+      };
+
+      selected.onerror = () => {
+        restoreCards();
+        alert("Check that the recording exists and its filename matches the code.");
+      };
+
+      selected.currentTime = 0;
+
+      selected.play().catch(() => {
+        restoreCards();
+        alert("Check that the recording exists and its filename matches the code.");
+      });
+    }
+  </script>
+
+</body>
+</html>
