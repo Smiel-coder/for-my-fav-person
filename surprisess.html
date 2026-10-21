@@ -12,9 +12,9 @@
     body {
       margin: 0;
       padding: 25px 14px 45px;
-      font-family: Arial, sans-serif;
+      font-family: Elephant, Elephant;
       color: #87365b;
-      background: linear-gradient(135deg, #ffe0ed, #ffc2dc, #fff0f6);
+      background: linear-gradient(135deg, #fcd0e2, #f5a5c8, #f5c8da);
       min-height: 100vh;
     }
 
@@ -24,8 +24,8 @@
     }
 
     .card {
-      background: rgba(255,255,255,.9);
-      border: 2px solid white;
+      background: rgba(248, 101, 204, 0.9);
+      border: 2px solid rgb(245, 129, 210);
       border-radius: 25px;
       padding: 25px 20px;
       margin: 18px 0;
@@ -48,8 +48,8 @@
       border-radius: 25px;
       padding: 13px 18px;
       margin: 7px 4px;
-      background: #ed5d9c;
-      color: white;
+      background: #720232;
+      color: rgb(253, 244, 249);
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
@@ -91,10 +91,10 @@
       height: 38px;
       padding: 0;
       margin: 0;
-      border: 2px solid white;
+      border: 2px solid rgb(31, 0, 39);
       border-radius: 50%;
-      background: rgba(255,255,255,.92);
-      color: #e84393;
+      background: rgba(247, 152, 242, 0.92);
+      color: #c0035e;
       font-size: 18px;
       box-shadow: 0 3px 12px #d76c9b40;
     }
@@ -117,59 +117,111 @@
       position: relative;
       z-index: 20;
       opacity: 1;
-      background-color: rgba(255,255,255,.96);
-      border-color: white;
+      background-color: rgba(248, 101, 204, 0.96);
+      border-color: rgb(247, 145, 216);
       box-shadow: 0 15px 45px #d76c9b40;
       pointer-events: auto;
     }
 
-    /* Photo gallery for Monthsary */
-    .photo-gallery {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 18px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 2.5s ease, visibility 0s linear 2.5s;
-    }
+   
+/* Monthsary photo gallery */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
 
-    .photo-gallery.show {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transition: opacity 1s ease, visibility 0s;
-    }
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 
-    .photo-gallery img {
-      width: 100%;
-      height: 130px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 2px solid white;
-      box-shadow: 0 4px 12px #d76c9b30;
-    }
+  transition: opacity 1s ease, visibility 0s linear 1s;
+}
 
-    @media (max-width: 380px) {
-      .photo-gallery img { height: 100px; }
-    }
+.photo-gallery.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 
-    @media (prefers-reduced-motion: reduce) {
-      .card, .back, .photo-gallery {
-        transition-duration: .01ms !important;
-      }
-    }
+  transition: opacity 1s ease, visibility 0s;
+}
+
+.photo-gallery img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid rgb(247, 145, 216);
+  box-shadow: 0 4px 12px #d76c9b30;
+}
+
+@media (max-width: 380px) {
+  .photo-gallery img {
+    height: 100px;
+  }
+}
+
+
+.music-controls {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgb(247, 145, 216);
+  border-radius: 30px;
+  box-shadow: 0 3px 12px #d76c9b40;
+}
+
+.music-controls .music-toggle {
+  position: static;
+  flex-shrink: 0;
+}
+
+#volumeSlider {
+  width: 85px;
+  accent-color: #ed5d9c;
+  cursor: pointer;
+}
+
+#volumeValue {
+  min-width: 30px;
+  color: #a83b70;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
   </style>
 </head>
 
 <body>
 
   <!-- Background music -->
-  <audio id="backgroundMusic" src="Love.mp3"
-         loop autoplay preload="auto"></audio>
-         
-         backgroundMusic.volume = 0.000001;
+
+<div class="music-controls">
+  <button id="musicButton" class="music-toggle"
+          onclick="toggleMusic()" aria-label="Turn music off">♫</button>
+
+  <label for="volumeSlider">♡</label>
+  <input
+    type="range"
+    id="volumeSlider"
+    min="0"
+    max="100"
+    value="3"
+    aria-label="Background music volume"
+  />
+  <span id="volumeValue">3%</span>
+</div>
+
+
 
   <!-- Music ON/OFF button -->
   <button id="musicButton" class="music-toggle"
@@ -227,10 +279,30 @@
   <script>
     const backgroundMusic = document.getElementById("backgroundMusic");
     const musicButton = document.getElementById("musicButton");
+    
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeValue = document.getElementById("volumeValue");
+
+// Set the initial volume to 3%.
+backgroundMusic.volume = 0.03;
+
+// Update the music volume when the slider moves.
+volumeSlider.addEventListener("input", function () {
+  const volume = Number(this.value);
+
+  backgroundMusic.volume = volume / 100;
+  volumeValue.textContent = volume + "%";
+
+  // If volume is raised above zero, allow music to play.
+  if (volume > 0 && !musicOff && backgroundMusic.paused) {
+    backgroundMusic.play().catch(() => {});
+  }
+});
+
     const container = document.getElementById("mainContainer");
     const monthsaryPhotos = document.getElementById("monthsaryPhotos");
 
-    backgroundMusic.volume = 0.000001;
+    backgroundMusic.volume = 0.01;
 
     let musicOff = false;
     let activeCard = null;
@@ -312,14 +384,16 @@
       activeCard = selectedCard;
       setButtonsDisabled(true);
 
-      // Show the three photos only for Monthsary.
+      // Hide the gallery before showing it again.
       monthsaryPhotos.classList.remove("show");
 
+      // Show the photos when Monthsary is tapped.
       if (id === "monthsaryAudio") {
-        monthsaryPhotos.style.visibility = "visible";
         requestAnimationFrame(() => {
           monthsaryPhotos.classList.add("show");
         });
+      }
+
       }
 
       // Begin hiding the other cards and heading.
@@ -354,8 +428,7 @@
         restoreCards();
         alert("Check that the recording exists and its filename matches the code.");
       });
-    }
-  </script>
+    
 
+  </script>
 </body>
-</html>
