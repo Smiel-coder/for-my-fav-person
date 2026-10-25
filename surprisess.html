@@ -124,43 +124,53 @@
     }
 
    
-/* Monthsary photo gallery */
+
+/* Aesthetic Monthsary photo gallery */
 .photo-gallery {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 25px;
 
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transform: translateY(20px);
 
-  transition: opacity 1s ease, visibility 0s linear 1s;
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease,
+    visibility 0s linear 0.8s;
 }
 
 .photo-gallery.show {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transform: translateY(0);
 
-  transition: opacity 1s ease, visibility 0s;
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease,
+    visibility 0s;
 }
 
 .photo-gallery img {
+  display: block;
   width: 100%;
-  height: 130px;
+  height: auto;
+  max-height: 500px;
   object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid rgb(247, 145, 216);
-  box-shadow: 0 4px 12px #d76c9b30;
+
+  border: 3px solid #fff0f7;
+  border-radius: 22px;
+  box-shadow: 0 8px 25px #87365b30;
 }
 
-@media (max-width: 380px) {
-  .photo-gallery img {
-    height: 100px;
-  }
+/* Hide the Monthsary button after tapping */
+.monthsary-button-hidden {
+  display: none !important;
 }
-
 
 .music-controls {
   position: fixed;
@@ -198,18 +208,65 @@
 }
 
 
+/* Smoothly hide the volume controls */
+.music-controls label,
+.music-controls #volumeSlider,
+.music-controls #volumeValue {
+  opacity: 0;
+  max-width: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    max-width 0.4s ease;
+}
+
+/* Reveal when hovered, focused, or touched */
+.music-controls:hover label,
+.music-controls:hover #volumeSlider,
+.music-controls:hover #volumeValue,
+.music-controls:focus-within label,
+.music-controls:focus-within #volumeSlider,
+.music-controls:focus-within #volumeValue,
+.music-controls.show-volume label,
+.music-controls.show-volume #volumeSlider,
+.music-controls.show-volume #volumeValue {
+  opacity: 1;
+  max-width: 100px;
+  pointer-events: auto;
+}
+
+.music-controls #volumeSlider {
+  width: 85px;
+  flex-shrink: 0;
+}
+
+.music-controls {
+  gap: 8px;
+  transition: padding 0.3s ease;
+}
+
+
   </style>
 </head>
 
 <body>
 
-  <!-- Background music -->
+  
+<!-- Background music and volume controls -->
+<audio id="backgroundMusic" src="Love.mp3" loop></audio>
 
 <div class="music-controls">
-  <button id="musicButton" class="music-toggle"
-          onclick="toggleMusic()" aria-label="Turn music off">♫</button>
+  <button
+    id="musicButton"
+    class="music-toggle"
+    onclick="toggleMusic()"
+    aria-label="Turn music off"
+  >♫</button>
 
   <label for="volumeSlider">♡</label>
+
   <input
     type="range"
     id="volumeSlider"
@@ -218,14 +275,9 @@
     value="3"
     aria-label="Background music volume"
   />
+
   <span id="volumeValue">3%</span>
 </div>
-
-
-
-  <!-- Music ON/OFF button -->
-  <button id="musicButton" class="music-toggle"
-          onclick="toggleMusic()" aria-label="Turn music off">♫</button>
 
   <main class="container" id="mainContainer">
 
@@ -248,7 +300,7 @@
 
     <section class="card" id="monthsaryCard">
       <h2>Monthsary 💖</h2>
-      <p>A message for my wifey Nih 💖</p>
+      <p>A message for my wifey Nhi 💖</p>
       <button class="target-button" onclick="playVoice('monthsaryAudio')">
         Monthsary 💖
       </button>
@@ -265,10 +317,10 @@
     </section>
 
     <section class="card" id="wifeyCard">
-      <h2>For Wifey Nih 💋</h2>
+      <h2>For Wifey Nhi 💋</h2>
       <p>Press it babeeeee 🥹</p>
       <button class="target-button" onclick="playVoice('wifeyAudio')">
-        For Wifey Nih 💖
+        For Wifey Nhi 💖
       </button>
       <audio id="wifeyAudio" src="wifeyy.m4a" preload="auto"></audio>
       <p class="caption">--------------------</p>
@@ -276,159 +328,187 @@
 
   </main>
 
-  <script>
-    const backgroundMusic = document.getElementById("backgroundMusic");
-    const musicButton = document.getElementById("musicButton");
-    
-const volumeSlider = document.getElementById("volumeSlider");
-const volumeValue = document.getElementById("volumeValue");
+  
+<script>
+  const backgroundMusic = document.getElementById("backgroundMusic");
+  const musicButton = document.getElementById("musicButton");
+  const volumeSlider = document.getElementById("volumeSlider");
+  const volumeValue = document.getElementById("volumeValue");
 
-// Set the initial volume to 3%.
-backgroundMusic.volume = 0.03;
+  const container = document.getElementById("mainContainer");
+  const monthsaryPhotos = document.getElementById("monthsaryPhotos");
+  const monthsaryButton = document.querySelector(
+    '#monthsaryCard button.target-button'
+  );
 
-// Update the music volume when the slider moves.
-volumeSlider.addEventListener("input", function () {
-  const volume = Number(this.value);
+  let musicOff = false;
+  let activeCard = null;
+  let isPlayingVoice = false;
 
-  backgroundMusic.volume = volume / 100;
-  volumeValue.textContent = volume + "%";
+  const voiceCards = {
+    meowAudio: document.getElementById("meowCard"),
+    monthsaryAudio: document.getElementById("monthsaryCard"),
+    wifeyAudio: document.getElementById("wifeyCard")
+  };
 
-  // If volume is raised above zero, allow music to play.
-  if (volume > 0 && !musicOff && backgroundMusic.paused) {
-    backgroundMusic.play().catch(() => {});
+  // Set the starting volume using the slider value.
+  backgroundMusic.volume = Number(volumeSlider.value) / 100;
+  volumeValue.textContent = volumeSlider.value + "%";
+
+  // Volume slider.
+  volumeSlider.addEventListener("input", function () {
+    const volume = Number(this.value);
+
+    backgroundMusic.volume = volume / 100;
+    volumeValue.textContent = volume + "%";
+
+    if (volume === 0) {
+      backgroundMusic.pause();
+    } else if (!musicOff && backgroundMusic.paused) {
+      backgroundMusic.play().catch(() => {});
+    }
+  });
+
+  // Music ON/OFF button.
+  function toggleMusic() {
+    if (musicOff) {
+      if (Number(volumeSlider.value) === 0) {
+        volumeSlider.value = 3;
+        backgroundMusic.volume = 0.03;
+        volumeValue.textContent = "3%";
+      }
+
+      backgroundMusic.play().then(() => {
+        musicOff = false;
+        musicButton.textContent = "♫";
+        musicButton.setAttribute("aria-label", "Turn music off");
+      }).catch(() => {
+        alert("Please try tapping the music button again.");
+      });
+    } else {
+      musicOff = true;
+      backgroundMusic.pause();
+      musicButton.textContent = "♪";
+      musicButton.setAttribute("aria-label", "Turn music on");
+    }
   }
-});
 
-    const container = document.getElementById("mainContainer");
-    const monthsaryPhotos = document.getElementById("monthsaryPhotos");
+  function setButtonsDisabled(disabled) {
+    document.querySelectorAll(".target-button").forEach(button => {
+      button.disabled = disabled;
+    });
+  }
 
-    backgroundMusic.volume = 0.01;
+  function restoreCards() {
+    if (!activeCard) return;
 
-    let musicOff = false;
-    let activeCard = null;
-    let isPlayingVoice = false;
-    let restoreTimer = null;
+    activeCard.style.transform = "";
+    activeCard.classList.remove("active");
+    container.classList.remove("focus-mode");
 
-    const voiceCards = {
-      meowAudio: document.getElementById("meowCard"),
-      monthsaryAudio: document.getElementById("monthsaryCard"),
-      wifeyAudio: document.getElementById("wifeyCard")
-    };
+    activeCard = null;
+    isPlayingVoice = false;
+    setButtonsDisabled(false);
 
-    // Attempt autoplay; browsers may require interaction first.
-    backgroundMusic.play().catch(() => {});
+    // Keep the Monthsary photos visible after the recording ends.
+  }
 
-    document.addEventListener("click", function startMusic() {
-      if (!musicOff && backgroundMusic.paused) {
-        backgroundMusic.play().catch(() => {});
+  function playVoice(id) {
+    const selected = document.getElementById(id);
+    const selectedCard = voiceCards[id];
+
+    if (!selected || !selectedCard || isPlayingVoice) return;
+
+    // Stop other voice recordings.
+    document.querySelectorAll("audio").forEach(audio => {
+      if (audio !== backgroundMusic) {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.onended = null;
+        audio.onerror = null;
       }
     });
 
-    function toggleMusic() {
-      if (musicOff) {
-        backgroundMusic.play().then(() => {
-          musicOff = false;
-          musicButton.textContent = "♫";
-          musicButton.setAttribute("aria-label", "Turn music off");
-        }).catch(() => {});
-      } else {
-        musicOff = true;
-        backgroundMusic.pause();
-        musicButton.textContent = "♪";
-        musicButton.setAttribute("aria-label", "Turn music on");
-      }
-    }
+    isPlayingVoice = true;
+    activeCard = selectedCard;
+    setButtonsDisabled(true);
 
-    function setButtonsDisabled(disabled) {
-      document.querySelectorAll(".target-button").forEach(button => {
-        button.disabled = disabled;
-      });
-    }
-
-    function restoreCards() {
-      if (!activeCard) return;
-
-      // Fade the Monthsary photos out, if present.
+    // Monthsary reveal.
+    if (id === "monthsaryAudio") {
+      monthsaryButton.classList.add("monthsary-button-hidden");
+      monthsaryPhotos.classList.add("show");
+    } else {
       monthsaryPhotos.classList.remove("show");
-
-      // Return the selected card to its normal position.
-      activeCard.style.transform = "";
-      activeCard.classList.remove("active");
-
-      container.classList.remove("focus-mode");
-
-      activeCard = null;
-      isPlayingVoice = false;
-      setButtonsDisabled(false);
     }
 
-    function playVoice(id) {
-      const selected = document.getElementById(id);
-      const selectedCard = voiceCards[id];
+    // Focus on the selected card.
+    container.classList.add("focus-mode");
+    selectedCard.classList.add("active");
 
-      if (!selected || !selectedCard || isPlayingVoice) return;
+    const rect = selectedCard.getBoundingClientRect();
+    const moveX =
+      window.innerWidth / 2 - (rect.left + rect.width / 2);
+    const moveY =
+      window.innerHeight / 2 - (rect.top + rect.height / 2);
 
-      // Stop any previous voice recording.
-      document.querySelectorAll("audio").forEach(audio => {
-        if (audio !== backgroundMusic) {
-          audio.pause();
-          audio.currentTime = 0;
-          audio.onended = null;
-          audio.onerror = null;
-        }
-      });
-
-      clearTimeout(restoreTimer);
-
-      isPlayingVoice = true;
-      activeCard = selectedCard;
-      setButtonsDisabled(true);
-
-      // Hide the gallery before showing it again.
-      monthsaryPhotos.classList.remove("show");
-
-      // Show the photos when Monthsary is tapped.
-      if (id === "monthsaryAudio") {
-        requestAnimationFrame(() => {
-          monthsaryPhotos.classList.add("show");
-        });
+    requestAnimationFrame(() => {
+      if (activeCard === selectedCard) {
+        selectedCard.style.transform =
+          `translate(${moveX}px, ${moveY}px)`;
       }
+    });
 
-      }
+    selected.onended = restoreCards;
 
-      // Begin hiding the other cards and heading.
-      container.classList.add("focus-mode");
-      selectedCard.classList.add("active");
+    selected.onerror = () => {
+      restoreCards();
+      alert("Check that the audio filename and file path are correct.");
+    };
 
-      // Move the selected card toward the center of the viewport.
-      const rect = selectedCard.getBoundingClientRect();
-      const moveX = window.innerWidth / 2 - (rect.left + rect.width / 2);
-      const moveY = window.innerHeight / 2 - (rect.top + rect.height / 2);
+    selected.currentTime = 0;
 
-      // Let the browser apply the focus state before moving.
-      requestAnimationFrame(() => {
-        if (activeCard === selectedCard) {
-          selectedCard.style.transform =
-            `translate(${moveX}px, ${moveY}px)`;
-        }
-      });
+    selected.play().catch(() => {
+      restoreCards();
+      alert("The audio could not play. Check the audio filename and file path.");
+    });
+  }
 
-      selected.onended = () => {
-        restoreCards();
-      };
+  
+const musicControls = document.querySelector(".music-controls");
+const slider = document.getElementById("volumeSlider");
 
-      selected.onerror = () => {
-        restoreCards();
-        alert("Check that the recording exists and its filename matches the code.");
-      };
+let hideVolumeTimer;
 
-      selected.currentTime = 0;
+function showVolumeControls() {
+  clearTimeout(hideVolumeTimer);
+  musicControls.classList.add("show-volume");
+}
 
-      selected.play().catch(() => {
-        restoreCards();
-        alert("Check that the recording exists and its filename matches the code.");
-      });
-    
+function hideVolumeControlsLater() {
+  clearTimeout(hideVolumeTimer);
 
-  </script>
+  hideVolumeTimer = setTimeout(() => {
+    musicControls.classList.remove("show-volume");
+  }, 1800);
+}
+
+// Reveal when the slider is touched or clicked.
+slider.addEventListener("pointerdown", showVolumeControls);
+
+// Hide shortly after interaction ends.
+window.addEventListener("pointerup", hideVolumeControlsLater);
+window.addEventListener("pointercancel", hideVolumeControlsLater);
+
+// Keep controls visible while adjusting the volume.
+slider.addEventListener("input", showVolumeControls);
+slider.addEventListener("change", hideVolumeControlsLater);
+
+// Reveal controls when tapping the music button.
+musicButton.addEventListener("click", () => {
+  showVolumeControls();
+  hideVolumeControlsLater();
+});
+
+</script>
+
 </body>
