@@ -5,28 +5,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For My Vợ yêu 💖</title>
+
   <style>
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 25px 14px 45px;
-      font-family: Arial, sans-serif;
+      font-family: Elephant, Arial, sans-serif;
       color: #87365b;
-      background: linear-gradient(135deg, #ffe0ed, #ffc2dc, #fff0f6);
+      background: linear-gradient(135deg, #fcd0e2, #f5a5c8, #f5c8da);
       min-height: 100vh;
     }
 
-    .container { max-width: 520px; margin: auto; }
+    .container {
+      max-width: 520px;
+      margin: auto;
+    }
 
     .card {
-      background: rgba(255,255,255,.9);
-      border: 2px solid white;
+      background: rgba(248, 101, 204, 0.9);
+      border: 2px solid rgb(245, 129, 210);
       border-radius: 25px;
       padding: 25px 20px;
       margin: 18px 0;
       text-align: center;
       box-shadow: 0 10px 30px #d76c9b25;
+
+      transition:
+        opacity 1.5s ease,
+        background-color 1.5s ease,
+        border-color 1.5s ease,
+        box-shadow 1.5s ease,
+        transform 1.8s cubic-bezier(.22, 1, .36, 1);
     }
 
     h1 { font-size: 2rem; }
@@ -37,8 +48,8 @@
       border-radius: 25px;
       padding: 13px 18px;
       margin: 7px 4px;
-      background: #ed5d9c;
-      color: white;
+      background: #720232;
+      color: rgb(253, 244, 249);
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
@@ -46,13 +57,20 @@
 
     button:active { transform: scale(.97); }
 
+    button:disabled {
+      cursor: wait;
+    }
+
     .cat {
       font-size: 75px;
       cursor: pointer;
       user-select: none;
     }
 
-    .caption { color: #b36a8c; font-size: .9rem; }
+    .caption {
+      color: #b36a8c;
+      font-size: .9rem;
+    }
 
     .back {
       display: inline-block;
@@ -60,9 +78,10 @@
       color: #a83b70;
       text-decoration: none;
       font-weight: bold;
+      transition: opacity 1.5s ease;
     }
 
-    /* Small music button at the top right */
+    /* Background music button */
     .music-toggle {
       position: fixed;
       top: 12px;
@@ -72,112 +91,424 @@
       height: 38px;
       padding: 0;
       margin: 0;
-      border: 2px solid white;
+      border: 2px solid rgb(31, 0, 39);
       border-radius: 50%;
-      background: rgba(255,255,255,.92);
-      color: #e84393;
+      background: rgba(247, 152, 242, 0.92);
+      color: #c0035e;
       font-size: 18px;
       box-shadow: 0 3px 12px #d76c9b40;
     }
+
+    /* Fade the other cards and heading */
+    .container.focus-mode > .card:not(.active),
+    .container.focus-mode > .back {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .container.focus-mode > .card:not(.active) {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    /* Selected card stays visible above the other content */
+    .container > .card.active {
+      position: relative;
+      z-index: 20;
+      opacity: 1;
+      background-color: rgba(248, 101, 204, 0.96);
+      border-color: rgb(247, 145, 216);
+      box-shadow: 0 15px 45px #d76c9b40;
+      pointer-events: auto;
+    }
+
+   
+
+/* Aesthetic Monthsary photo gallery */
+.photo-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 25px;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(20px);
+
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease,
+    visibility 0s linear 0.8s;
+}
+
+.photo-gallery.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease,
+    visibility 0s;
+}
+
+.photo-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+
+  border: 3px solid #fff0f7;
+  border-radius: 22px;
+  box-shadow: 0 8px 25px #87365b30;
+}
+
+/* Hide the Monthsary button after tapping */
+.monthsary-button-hidden {
+  display: none !important;
+}
+
+.music-controls {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgb(247, 145, 216);
+  border-radius: 30px;
+  box-shadow: 0 3px 12px #d76c9b40;
+}
+
+.music-controls .music-toggle {
+  position: static;
+  flex-shrink: 0;
+}
+
+#volumeSlider {
+  width: 85px;
+  accent-color: #ed5d9c;
+  cursor: pointer;
+}
+
+#volumeValue {
+  min-width: 30px;
+  color: #a83b70;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+/* Smoothly hide the volume controls */
+.music-controls label,
+.music-controls #volumeSlider,
+.music-controls #volumeValue {
+  opacity: 0;
+  max-width: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    max-width 0.4s ease;
+}
+
+/* Reveal when hovered, focused, or touched */
+.music-controls:hover label,
+.music-controls:hover #volumeSlider,
+.music-controls:hover #volumeValue,
+.music-controls:focus-within label,
+.music-controls:focus-within #volumeSlider,
+.music-controls:focus-within #volumeValue,
+.music-controls.show-volume label,
+.music-controls.show-volume #volumeSlider,
+.music-controls.show-volume #volumeValue {
+  opacity: 1;
+  max-width: 100px;
+  pointer-events: auto;
+}
+
+.music-controls #volumeSlider {
+  width: 85px;
+  flex-shrink: 0;
+}
+
+.music-controls {
+  gap: 8px;
+  transition: padding 0.3s ease;
+}
+
+
   </style>
 </head>
+
 <body>
 
-  <!-- Background music -->
-  <audio id="backgroundMusic" src="Love.mp3"
-         loop autoplay preload="auto"></audio>
+  
+<!-- Background music and volume controls -->
+<audio id="backgroundMusic" src="Love.mp3" loop></audio>
 
-  <!-- Music ON/OFF button -->
-  <button id="musicButton" class="music-toggle"
-          onclick="toggleMusic()" aria-label="Turn music off">♫</button>
+<div class="music-controls">
+  <button
+    id="musicButton"
+    class="music-toggle"
+    onclick="toggleMusic()"
+    aria-label="Turn music on"
+>♪</button>
 
-  <main class="container">
+  <label for="volumeSlider">♡</label>
+
+  <input
+    type="range"
+    id="volumeSlider"
+    min="0"
+    max="100"
+    value="3"
+    aria-label="Background music volume"
+  />
+
+  <span id="volumeValue">3%</span>
+</div>
+
+  <main class="container" id="mainContainer">
+
     <a class="back" href="index.html">← spam kissee meee💋</a>
 
-    <section class="card">
+    <section class="card" id="introCard">
       <h1>For My Vợ yêu 💖</h1>
     </section>
 
-    <section class="card">
+    <section class="card" id="meowCard">
       <h2>A little kitty kitty 😭</h2>
       <div class="cat" onclick="playVoice('meowAudio')">🐱</div>
       <p>try to tap babe and you will hear Viva😭</p>
-      <button onclick="playVoice('meowAudio')">Meow for meow 🐾</button>
+      <button class="target-button" onclick="playVoice('meowAudio')">
+        Meow for meow 🐾
+      </button>
       <audio id="meowAudio" src="meow.m4a" preload="auto"></audio>
       <p class="caption">--------------------</p>
     </section>
 
-    <section class="card">
+    <section class="card" id="monthsaryCard">
       <h2>Monthsary 💖</h2>
-      <p>A message for my wifey Nih 💖</p>
-      <button onclick="playVoice('monthsaryAudio')">Monthsary 💖</button>
+      <p>A message for my wifey Nhi 💖</p>
+      <button class="target-button" onclick="playVoice('monthsaryAudio')">
+        Monthsary 💖
+      </button>
       <audio id="monthsaryAudio" src="month.m4a" preload="auto"></audio>
+
+      <!-- Optional three-photo gallery -->
+      <div id="monthsaryPhotos" class="photo-gallery">
+        <img src="monthsary1.jpg" alt="Our special memory 1">
+        <img src="monthsary2.jpg" alt="Our special memory 2">
+        <img src="monthsary3.jpg" alt="Our special memory 3">
+      </div>
+
       <p class="caption">--------------------</p>
     </section>
 
-    <section class="card">
-      <h2>For Wifey Nih 💋</h2>
+    <section class="card" id="wifeyCard">
+      <h2>For Wifey Nhi 💋</h2>
       <p>Press it babeeeee 🥹</p>
-      <button onclick="playVoice('wifeyAudio')">For Wifey Nih 💖</button>
+      <button class="target-button" onclick="playVoice('wifeyAudio')">
+        For Wifey Nhi 💖
+      </button>
       <audio id="wifeyAudio" src="wifeyy.m4a" preload="auto"></audio>
       <p class="caption">--------------------</p>
     </section>
+
   </main>
 
-  <script>
-    const backgroundMusic = document.getElementById("backgroundMusic");
-    const musicButton = document.getElementById("musicButton");
+  
+<script>
+  const backgroundMusic = document.getElementById("backgroundMusic");
+  const musicButton = document.getElementById("musicButton");
+  const volumeSlider = document.getElementById("volumeSlider");
+  const volumeValue = document.getElementById("volumeValue");
 
-    // Soft background music volume: 20%
-    backgroundMusic.volume = 0.20;
+  const container = document.getElementById("mainContainer");
+  const monthsaryPhotos = document.getElementById("monthsaryPhotos");
+  const monthsaryButton = document.querySelector(
+    '#monthsaryCard button.target-button'
+  );
 
-    let musicOff = false;
+  let musicOff = true;
+  let activeCard = null;
+  let isPlayingVoice = false;
 
-    // Try autoplay when the page opens
-    backgroundMusic.play().catch(() => {
-      // Browser may require the visitor to tap first
-    });
+  const voiceCards = {
+    meowAudio: document.getElementById("meowCard"),
+    monthsaryAudio: document.getElementById("monthsaryCard"),
+    wifeyAudio: document.getElementById("wifeyCard")
+  };
 
-    // Start music after the first interaction if autoplay was blocked
-    document.addEventListener("click", function startMusic() {
-      if (!musicOff && backgroundMusic.paused) {
-        backgroundMusic.play().catch(() => {});
+  // Set the starting volume using the slider value.
+  backgroundMusic.volume = Number(volumeSlider.value) / 100;
+  volumeValue.textContent = volumeSlider.value + "%";
+
+  // Volume slider.
+  volumeSlider.addEventListener("input", function () {
+    const volume = Number(this.value);
+
+    backgroundMusic.volume = volume / 100;
+    volumeValue.textContent = volume + "%";
+
+    if (volume === 0) {
+      backgroundMusic.pause();
+    } else if (!musicOff && backgroundMusic.paused) {
+      backgroundMusic.play().catch(() => {});
+    }
+  });
+
+  // Music ON/OFF button.
+  function toggleMusic() {
+    if (musicOff) {
+      if (Number(volumeSlider.value) === 0) {
+        volumeSlider.value = 3;
+        backgroundMusic.volume = 0.03;
+        volumeValue.textContent = "3%";
       }
-    });
 
-    function toggleMusic() {
-      if (musicOff) {
+      backgroundMusic.play().then(() => {
         musicOff = false;
-        backgroundMusic.play().then(() => {
-          musicButton.textContent = "♫";
-          musicButton.setAttribute("aria-label", "Turn music off");
-        }).catch(() => {
-          musicOff = true;
-        });
-      } else {
-        musicOff = true;
-        backgroundMusic.pause();
-        musicButton.textContent = "♪";
-        musicButton.setAttribute("aria-label", "Turn music on");
+        musicButton.textContent = "♫";
+        musicButton.setAttribute("aria-label", "Turn music off");
+      }).catch(() => {
+        alert("Please try tapping the music button again.");
+      });
+    } else {
+      musicOff = true;
+      backgroundMusic.pause();
+      musicButton.textContent = "♪";
+      musicButton.setAttribute("aria-label", "Turn music on");
+    }
+  }
+
+  function setButtonsDisabled(disabled) {
+    document.querySelectorAll(".target-button").forEach(button => {
+      button.disabled = disabled;
+    });
+  }
+
+  function restoreCards() {
+    if (!activeCard) return;
+
+    activeCard.style.transform = "";
+    activeCard.classList.remove("active");
+    container.classList.remove("focus-mode");
+
+    activeCard = null;
+    isPlayingVoice = false;
+    setButtonsDisabled(false);
+
+    // Keep the Monthsary photos visible after the recording ends.
+  }
+
+  function playVoice(id) {
+    const selected = document.getElementById(id);
+    const selectedCard = voiceCards[id];
+
+    if (!selected || !selectedCard || isPlayingVoice) return;
+
+    // Stop other voice recordings.
+    document.querySelectorAll("audio").forEach(audio => {
+      if (audio !== backgroundMusic) {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.onended = null;
+        audio.onerror = null;
       }
-    }
+    });
 
-    function playVoice(id) {
-      const selected = document.getElementById(id);
+    isPlayingVoice = true;
+    activeCard = selectedCard;
+    setButtonsDisabled(true);
 
-      // Stop other voice recordings, but keep background music playing
-      document.querySelectorAll("audio").forEach(audio => {
-        if (audio !== selected && audio !== backgroundMusic) {
-          audio.pause();
-          audio.currentTime = 0;
-        }
-      });
+   if (id === "monthsaryAudio") {
+  monthsaryButton.classList.add("monthsary-button-hidden");
+  monthsaryPhotos.classList.add("show");
+} else {
+  monthsaryButton.classList.remove("monthsary-button-hidden");
+  monthsaryPhotos.classList.remove("show");
+}
 
-      selected.currentTime = 0;
-      selected.play().catch(() => {
-        alert("Check that the recording exists and its filename matches the code.");
-      });
-    }
-  </script>
+    // Focus on the selected card.
+    container.classList.add("focus-mode");
+    selectedCard.classList.add("active");
+
+    const rect = selectedCard.getBoundingClientRect();
+    const moveX =
+      window.innerWidth / 2 - (rect.left + rect.width / 2);
+    const moveY =
+      window.innerHeight / 2 - (rect.top + rect.height / 2);
+
+    requestAnimationFrame(() => {
+      if (activeCard === selectedCard) {
+        selectedCard.style.transform =
+          `translate(${moveX}px, ${moveY}px)`;
+      }
+    });
+
+    selected.onended = restoreCards;
+
+    selected.onerror = () => {
+      restoreCards();
+      alert("Check that the audio filename and file path are correct.");
+    };
+
+    selected.currentTime = 0;
+
+    selected.play().catch(() => {
+      restoreCards();
+      alert("The audio could not play. Check the audio filename and file path.");
+    });
+  }
+
+  
+const musicControls = document.querySelector(".music-controls");
+const slider = document.getElementById("volumeSlider");
+
+let hideVolumeTimer;
+
+function showVolumeControls() {
+  clearTimeout(hideVolumeTimer);
+  musicControls.classList.add("show-volume");
+}
+
+function hideVolumeControlsLater() {
+  clearTimeout(hideVolumeTimer);
+
+  hideVolumeTimer = setTimeout(() => {
+    musicControls.classList.remove("show-volume");
+  }, 1800);
+}
+
+// Reveal when the slider is touched or clicked.
+slider.addEventListener("pointerdown", showVolumeControls);
+
+// Hide shortly after interaction ends.
+window.addEventListener("pointerup", hideVolumeControlsLater);
+window.addEventListener("pointercancel", hideVolumeControlsLater);
+
+// Keep controls visible while adjusting the volume.
+slider.addEventListener("input", showVolumeControls);
+slider.addEventListener("change", hideVolumeControlsLater);
+
+// Reveal controls when tapping the music button.
+musicButton.addEventListener("click", () => {
+  showVolumeControls();
+  hideVolumeControlsLater();
+});
+
+</script>
+
 </body>
-</html>
